@@ -3,8 +3,6 @@ public class Main {
     public static void main(String[] args) {
         int earnings = 0; // доход
         int spendings = 0; //расход
-        int earningsInput; //Ввод дохода
-        int spendingsInput; //Ввод расхода
         int choice; // Выбор пользователя
         java.util.Scanner scanner = new java.util.Scanner(System.in);
         while (true) {
@@ -12,56 +10,57 @@ public class Main {
             System.out.println("2. Добавить новый расход ");
             System.out.println("3. Выбрать систему налогообложения ");
             choice = scanner.nextInt();
-            if (choice == 1) {
-                System.out.print("Введите сумму дохода: ");
-                earningsInput = scanner.nextInt();
-                earnings += earningsInput;
-            } else if (choice == 2) {
-                System.out.print("Введите сумму расхода: ");
-                spendingsInput = scanner.nextInt();
-                spendings += spendingsInput;
-            } else if (choice == 3) {
-                int resultUsnSpendings = TaxCalculator.calculateUsnSpendings(earnings, spendings);
-                int resultUsn = TaxCalculator.calculateUsn(earnings);
-                if (resultUsnSpendings < resultUsn) {
-                    int savings = resultUsn - resultUsnSpendings;
-                    System.out.println("Мы советуем вам УСН доходы минус расходы");
-                    System.out.println("Ваш налог составит: " + resultUsnSpendings + " рублей");
-                    System.out.println("Налог на другой системе: " + resultUsn + " рублей");
-                    System.out.println("Экономия: " + savings + " рублей");
+            switch (choice) {
+                case 1:
+                    System.out.print("Введите сумму дохода: ");
+                    earnings += scanner.nextInt();
                     break;
-                } else if (resultUsnSpendings > resultUsn) {
-                    int savings = resultUsnSpendings - resultUsn;
-                    System.out.println("Мы советуем вам УСН доходы");
-                    System.out.println("Ваш налог составит: " + resultUsn + " рублей");
-                    System.out.println("Налог на другой системе: " + resultUsnSpendings + " рублей");
-                    System.out.println("Экономия: " + savings + " рублей");
+                case 2:
+                    System.out.print("Введите сумму расхода: ");
+                    spendings += scanner.nextInt();
                     break;
-                } else if (resultUsnSpendings == resultUsn) {
-                    System.out.println("Налоги на обеих системах равны. Можете выбрать любую систему налогообложения");
+                case 3:
+                    int resultUsnSpendings = TaxCalculator.calculateUsnSpendings(earnings, spendings);
+                    int resultUsn = TaxCalculator.calculateUsn(earnings);
+                    if (resultUsnSpendings < resultUsn) {
+                        int savings = resultUsn - resultUsnSpendings;
+                        System.out.println("Мы советуем вам УСН доходы минус расходы");
+                        System.out.println("Ваш налог составит: " + resultUsnSpendings + " рублей");
+                        System.out.println("Налог на другой системе: " + resultUsn + " рублей");
+                        System.out.println("Экономия: " + savings + " рублей");
+                        return;
+                    } else if (resultUsnSpendings > resultUsn) {
+                        int savings = resultUsnSpendings - resultUsn;
+                        System.out.println("Мы советуем вам УСН доходы");
+                        System.out.println("Ваш налог составит: " + resultUsn + " рублей");
+                        System.out.println("Налог на другой системе: " + resultUsnSpendings + " рублей");
+                        System.out.println("Экономия: " + savings + " рублей");
+                        return;
+                    } else if (resultUsnSpendings == resultUsn) {
+                        System.out.println("Налоги на обеих системах равны. Можете выбрать любую систему налогообложения");
+                        return;
+                    } else {
+                        System.out.println("Обратитесь в техподдержку, что-то пошло не так");
+                        return;
+                    }
+                default:
+                    System.out.println("Введено некорректное значение");
+                    System.out.println("______________________________");
                     break;
-                } else {
-                    System.out.println("Обратитесь в техподдержку, что-то пошло не так");
-                    break;
-                }
-            } else {
-                System.out.println("Введено некорректное значение ");
-                System.out.println("______________________________");
+            }
+        }
+    }
+        public static class TaxCalculator {
+            public static int calculateUsnSpendings(int earnings, int spendings) {
+                int tax = (earnings - spendings) * 15 / 100;
+                return (tax >= 0) ? tax : 0;
+            }
+
+            public static int calculateUsn(int earnings) {
+                int tax = earnings * 6 / 100;
+                return (tax >= 0) ? tax : 0;
             }
         }
     }
 
-
-    public static class TaxCalculator {
-        public static int calculateUsnSpendings(int earnings, int spendings) {
-            int tax = (earnings - spendings) * 15 / 100;
-            return (tax >= 0) ? tax : 0;
-        }
-
-        public static int calculateUsn(int earnings) {
-            int tax = earnings * 6 / 100;
-            return (tax >= 0) ? tax : 0;
-        }
-    }
-}
 
